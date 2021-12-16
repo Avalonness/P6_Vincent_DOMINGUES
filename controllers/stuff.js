@@ -1,3 +1,4 @@
+//Import des éléments nécessaires
 const Thing = require('../models/thing');
 const fs = require('fs');
 
@@ -23,7 +24,7 @@ exports.createThing = (req, res, next) => {
     );
   };
 
-//Trouver les ou une sauce
+//Trouver les ou la sauce
   exports.getAll = (req, res, next) => {
     Thing.find().then(
       (things) => {
