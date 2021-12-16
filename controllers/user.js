@@ -32,7 +32,7 @@ exports.signup = (req, res, next) => {
               userId: user._id,
               token: jwt.sign(
                 { userId: user._id },
-                'POKEMON_ATTRAPEZ_LES_TOUS ',
+                'POKEMON_ATTRAPEZ_LES_TOUS',
                 { expiresIn: '24h' }
               )
             });
