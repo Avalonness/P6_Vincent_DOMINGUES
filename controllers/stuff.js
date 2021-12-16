@@ -95,3 +95,49 @@ exports.modifyThing = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
   };
+
+  //Like ou Dislike une sauce
+
+  exports.likeThing = (req, res, next) => {
+    const userId = req.body.userId;
+    const like = req.body.like;
+    const sauceId = req.params.id;
+    Thing.findOne({ _id: sauceId })
+        .then(sauce => {
+            // nouvelles valeurs à modifier
+            const newValues = {
+                usersLiked: sauce.usersLiked,
+                usersDisliked: sauce.usersDisliked,
+                likes: 0,
+                dislikes: 0
+            }
+            // Différents cas:
+            switch (like) {
+                case 1:  // si on aime la sauce
+                    newValues.usersLiked.push(userId);
+                    break;
+                case -1:  // si on aime pas la sauce
+                    newValues.usersDisliked.push(userId);
+                    break;
+                case 0:  // Retour à l'état d'origine
+                    if (newValues.usersLiked.includes(userId)) {
+                        // annulé le like
+                        const index = newValues.usersLiked.indexOf(userId);
+                        newValues.usersLiked.splice(index, 1);
+                    } else {
+                        // annulé le dislike
+                        const index = newValues.usersDisliked.indexOf(userId);
+                        newValues.usersDisliked.splice(index, 1);
+                    }
+                    break;
+            };
+            // Calcul du nombre de likes / dislikes
+            newValues.likes = newValues.usersLiked.length;
+            newValues.dislikes = newValues.usersDisliked.length;
+            // Mise à jour de la sauce avec les nouvelles valeurs
+            Thing.updateOne({ _id: sauceId }, newValues )
+                .then(() => res.status(200).json({ message: 'Sauce notée !' }))
+                .catch(error => res.status(400).json({ error }))  
+        })
+        .catch(error => res.status(500).json({ error }));
+}

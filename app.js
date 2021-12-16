@@ -28,7 +28,7 @@ app.use(express.json());
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', stuffRoutes);
 
-//Gérer les images reçu
+//Gérer les images
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
